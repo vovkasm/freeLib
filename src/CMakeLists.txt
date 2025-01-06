@@ -129,12 +129,14 @@ endif(UNIX AND NOT APPLE)
 if(FREELIB_QT_MAJOR_VERSION EQUAL 6)
     qt6_add_resources(PROJECT_SOURCES resource.qrc)
     qt_add_executable(freelib
+        MACOSX_BUNDLE
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
     )
 else()
     qt5_add_resources(PROJECT_SOURCES resource.qrc)
     add_executable(freelib
+        MACOSX_BUNDLE
         ${PROJECT_SOURCES}
         #${CMAKE_CURRENT_BINARY_DIR}/translations.qrc
     )
@@ -145,7 +147,9 @@ endif()
 
 file(GLOB QM_FILES "${CMAKE_CURRENT_SOURCE_DIR}/language_*.qm")
 #file(COPY ${QM_FILES} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/translations)
-install(FILES ${QM_FILES} DESTINATION ${DATA_INSTALL_DIR}/translations)
+if(NOT APPLE)
+    install(FILES ${QM_FILES} DESTINATION ${DATA_INSTALL_DIR}/translations)
+endif()
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     add_custom_command(
@@ -194,8 +198,4 @@ target_precompile_headers(freelib
 if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(freelib)
 endif()
-
-if(UNIX AND NOT APPLE)
-    install(TARGETS freelib DESTINATION ${CMAKE_INSTALL_BINDIR})
-endif(UNIX AND NOT APPLE)
 

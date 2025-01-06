@@ -31,6 +31,8 @@ if(UNIX AND NOT APPLE)
 
     include(GNUInstallDirs)
     set(DATA_INSTALL_DIR "${CMAKE_INSTALL_DATADIR}/freelib")
+
+    install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/xsl/fonts DESTINATION ${DATA_INSTALL_DIR})
 endif()
 
 if(APPLE)
@@ -40,7 +42,10 @@ endif()
 add_subdirectory(src/)
 add_subdirectory(data/)
 
-install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/xsl/fonts DESTINATION ${DATA_INSTALL_DIR})
+install(TARGETS freelib
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    BUNDLE DESTINATION .
+)
 
 if(APPLE)
     set(ICNS_PATH ${CMAKE_SOURCE_DIR}/data/macos/freeLib.icns)
@@ -51,13 +56,21 @@ if(APPLE)
         ${ICNS_PATH}
     )
     set_target_properties(freelib PROPERTIES
-        MACOSX_BUNDLE ON
         MACOSX_BUNDLE_BUNDLE_NAME "freeLib"
         MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
         MACOSX_BUNDLE_GUI_IDENTIFIER org.vovkasm.freeLib
         MACOSX_BUNDLE_ICON_FILE "freeLib.icns"
         MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
     )
+
+    install(CODE [[
+        set(CMAKE_INSTALL_PREFIX "" CACHE FILEPATH "Install prefix (hack to force cmake to make path absolute)")
+        message("CMAKE_INSTALL_PREFIX: ${CMAKE_INSTALL_PREFIX}")
+
+        include(BundleUtilities)
+        set(BU_CHMOD_BUNDLE_ITEMS 1)
+        fixup_bundle("${CMAKE_INSTALL_PREFIX}/freelib.app" "" "")
+    ]])
 endif()
 
 
