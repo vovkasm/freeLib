@@ -8,5 +8,6 @@ build-*
 *.directory
 .idea
 .vs
+.cache/
 cmake-build-*
 makeqm.sh
