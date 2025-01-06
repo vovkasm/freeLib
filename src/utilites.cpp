@@ -332,6 +332,7 @@ QString getAppDirPath()
         dir.cdUp();
         if (dir.dirName() == "Contents") {
             dir.cdUp();
+            dir.cdUp();
             // Yes, we change dir to the one contains our AppName.app bundle
             path = dir.absolutePath();
         }
