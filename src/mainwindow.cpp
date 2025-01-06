@@ -303,9 +303,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ChangingTrayIcon(g::options.nIconTray, g::options.nTrayColor);
 
-#ifdef Q_OS_OSX
-    connect(MyPrivate::instance(), SIGNAL(dockClicked()), SLOT(dockClicked()));
-#endif
+// TODO(vovkasm): is this really needed in modern Qt?
+// #ifdef Q_OS_OSX
+//     connect(MyPrivate::instance(), SIGNAL(dockClicked()), SLOT(dockClicked()));
+// #endif
     connect(ui->actionMinimize_window, &QAction::triggered, this, &MainWindow::MinimizeWindow);
 
     addShortcutToToolTip(ui->btnCheck, ui->actionCheck_uncheck);
@@ -1026,8 +1027,7 @@ void MainWindow::BookDblClick()
     if(g::options.applications.contains(book.sFormat)){
         if(
 #ifdef Q_OS_MACX
-        QProcess::startDetached("open",QStringList()<<options.applications.value(fi.suffix().toLower())<<"--args"<<file.fileName())&&
-                QFileInfo(g::options.applications.value(sExt)).exists()
+        QProcess::startDetached("open", QStringList() << g::options.applications.at(book.sFormat) << "--args" << sFileName)
 #else
         QProcess::startDetached(g::options.applications.at(book.sFormat), QStringList() << sFileName)
 #endif
@@ -2812,39 +2812,20 @@ void MainWindow::TrayMenuAction(QSystemTrayIcon::ActivationReason reson)
         this->setFocus(Qt::ActiveWindowFocusReason);
     }
 #else
-    #ifdef Q_OS_OSX
-        if(reson==QSystemTrayIcon::Unknown)
-            return;
-        if(this->isActiveWindow() && this->isVisible())
-        {
-            this->setWindowState(this->windowState()|Qt::WindowMinimized);
-            if(options.nIconTray!=0)
-                this->hide();
-        }
-        else
-        {
-            this->show();
-            this->setWindowState(this->windowState() & ~Qt::WindowMinimized);
-            this->activateWindow();
-            this->raise();
-            this->setFocus(Qt::ActiveWindowFocusReason);
-        }
-    #else
-        if(this->isActiveWindow() && this->isVisible())
-        {
-            this->setWindowState(this->windowState()|Qt::WindowMinimized);
-            if(g::options.nIconTray != 0)
-                this->hide();
-        }
-        else
-        {
-            this->show();
-            this->setWindowState(this->windowState() & ~Qt::WindowMinimized);
-            this->raise();
-            this->activateWindow();
-            this->setFocus(Qt::ActiveWindowFocusReason);
-        }
-    #endif
+    if(this->isActiveWindow() && this->isVisible())
+    {
+        this->setWindowState(this->windowState()|Qt::WindowMinimized);
+        if(g::options.nIconTray != 0)
+            this->hide();
+    }
+    else
+    {
+        this->show();
+        this->setWindowState(this->windowState() & ~Qt::WindowMinimized);
+        this->raise();
+        this->activateWindow();
+        this->setFocus(Qt::ActiveWindowFocusReason);
+    }
 #endif
 }
 

@@ -224,13 +224,7 @@ void SettingsDlg::LoadSettings()
     ui->tray_color->setEnabled(options_.nIconTray > 0);
     ui->tray_color->setCurrentIndex(options_.nTrayColor);
     ui->database_path->setText(options_.sDatabasePath);
-
-#ifdef Q_OS_MAC
-//    ui->settings_to_file->setChecked(QFileInfo(app->applicationDirPath()+"/../../../freeLib/freeLib.cfg").exists());
-    ui->settings_to_file->setChecked(QFileInfo(app->applicationDirPath()+"/freeLib.cfg").exists());
-#else
-    ui->settings_to_file->setChecked(QFileInfo::exists(QApplication::applicationDirPath() + u"/freeLib.cfg"_s));
-#endif
+    ui->settings_to_file->setChecked(QFileInfo::exists(getAppDirPath() + u"/freeLib.cfg"_s));
     ui->CloseExpDlg->setChecked(options_.bCloseDlgAfterExport);
     ui->uncheck_export->setChecked(options_.bUncheckAfterExport);
 #ifdef Q_OS_WINDOWS
@@ -438,13 +432,7 @@ void SettingsDlg::btnOK()
 {
     if(ui->settings_to_file->isChecked())
     {
-#ifdef Q_OS_MAC
-//        QString dir=app->applicationDirPath()+"/../../../freeLib";
-        QString dir=app->applicationDirPath();
-#else
-        QString dir = QApplication::applicationDirPath();
-#endif
-        QDir().mkpath(dir);
+        QString dir = getAppDirPath();
         QFile cfg(dir + u"/freeLib.cfg"_s);
         if(!cfg.exists())
         {
@@ -454,14 +442,7 @@ void SettingsDlg::btnOK()
     }
     else
     {
-#ifdef Q_OS_MAC
-        QFile().remove(app->applicationDirPath()+"/freeLib.cfg");
-//        QFile().remove(app->applicationDirPath()+"/../../../freeLib/freeLib.cfg");
-//        if(QDir(app->applicationDirPath()+"/../../../freeLib").entryList(QDir::Files).count()==0)
-//            QDir(app->applicationDirPath()+"/../../../freeLib").removeRecursively();
-#else
-        QFile().remove(QApplication::applicationDirPath() + u"/freeLib.cfg"_s);
-#endif
+        QFile().remove(getAppDirPath() + u"/freeLib.cfg"_s);
     }
     auto settings = GetSettings(true);
 

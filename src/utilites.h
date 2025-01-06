@@ -67,6 +67,7 @@ bool localeStringCompare(const QString &str1, const QString &str2);
 void setProxy();
 #endif
 QSharedPointer<QSettings> GetSettings(bool bReopen = false);
+QString getAppDirPath();
 void setLocale(const QString &sLocale);
 bool setCurrentZipFileName(QuaZip *zip, const QString &name);
 bool kindlegenInstalled();

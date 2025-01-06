@@ -301,21 +301,44 @@ void setProxy()
 QSharedPointer<QSettings> GetSettings(bool bReopen)
 {
     static QSharedPointer<QSettings> pSettings;
-    if(bReopen || !pSettings)
-    {
-        QString sFile = QApplication::applicationDirPath() + u"/freeLib.cfg"_s;
-        if(!QFile::exists(sFile)){
-            sFile = QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation);
-            if(!sFile.endsWith(u"freeLib"_s))
-                sFile += u"/freeLib"_s;
-            sFile += u"/freeLib.conf"_s;
-        }
-        pSettings = QSharedPointer<QSettings> (new QSettings(sFile, QSettings::IniFormat));
-        #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-        pSettings->setIniCodec("UTF-8");
-        #endif
+    if (pSettings || bReopen)
+        return pSettings;
+
+    QString sFile = getAppDirPath() + u"/freeLib.cfg"_s;
+    if(!QFile::exists(sFile)){
+        sFile = QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation);
+        if(!sFile.endsWith(u"freeLib"_s))
+            sFile += u"/freeLib"_s;
+        sFile += u"/freeLib.conf"_s;
     }
+    pSettings = QSharedPointer<QSettings> (new QSettings(sFile, QSettings::IniFormat));
+
+    #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+    pSettings->setIniCodec("UTF-8");
+    #endif
+
     return pSettings;
+}
+
+QString getAppDirPath()
+{
+    QString path = QApplication::applicationDirPath();
+
+    #ifdef Q_OS_MAC
+    // On macos if there is application bundle, we must locate config relative to bundle path, not executable
+    QDir dir(QApplication::applicationDirPath());
+    dir.makeAbsolute();
+    if (dir.dirName() == "MacOS") {
+        dir.cdUp();
+        if (dir.dirName() == "Contents") {
+            dir.cdUp();
+            // Yes, we change dir to the one contains our AppName.app bundle
+            path = dir.absolutePath();
+        }
+    }
+    #endif
+
+    return path;
 }
 
 void setLocale(const QString &sLocale)
