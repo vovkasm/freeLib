@@ -33,6 +33,10 @@ if(UNIX AND NOT APPLE)
     set(DATA_INSTALL_DIR "${CMAKE_INSTALL_DATADIR}/freelib")
 endif()
 
+if(APPLE)
+    set(DATA_INSTALL_DIR "freelib")
+endif()
+
 add_subdirectory(src/)
 add_subdirectory(data/)
 
