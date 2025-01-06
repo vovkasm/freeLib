@@ -122,23 +122,26 @@ endif()
 #configure_file(translations.qrc ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
 #file(COPY ${TS_FILES} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/translate)
 
-if(UNIX AND NOT APPLE)
-    file(COPY xsl/fonts DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/xsl)
-endif(UNIX AND NOT APPLE)
+if(UNIX)
+    file(GLOB FONTS "${CMAKE_CURRENT_SOURCE_DIR}/xsl/fonts/*.ttf")
+    set_source_files_properties(${FONTS} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources/fonts")
+    file(COPY ${FONTS} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/xsl/fonts)
+endif(UNIX)
 
 if(FREELIB_QT_MAJOR_VERSION EQUAL 6)
     qt6_add_resources(PROJECT_SOURCES resource.qrc)
     qt_add_executable(freelib
         MACOSX_BUNDLE
         MANUAL_FINALIZATION
+        translations.qrc
         ${PROJECT_SOURCES}
     )
 else()
     qt5_add_resources(PROJECT_SOURCES resource.qrc)
     add_executable(freelib
         MACOSX_BUNDLE
+        translations.qrc
         ${PROJECT_SOURCES}
-        #${CMAKE_CURRENT_BINARY_DIR}/translations.qrc
     )
 endif()
 
@@ -150,6 +153,10 @@ file(GLOB QM_FILES "${CMAKE_CURRENT_SOURCE_DIR}/language_*.qm")
 if(NOT APPLE)
     install(FILES ${QM_FILES} DESTINATION ${DATA_INSTALL_DIR}/translations)
 endif()
+
+if(APPLE)
+    target_sources(freelib PRIVATE ${FONTS} ${QM_FILES})
+endif(APPLE)
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     add_custom_command(

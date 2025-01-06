@@ -49,9 +49,7 @@ SettingsDlg::SettingsDlg(QWidget *parent) :
     ui->ExportList->setColumnWidth(1, 250);
     ui->ExportList->setColumnWidth(2, 150);
 
-    QStringList dirContent = QDir(QApplication::applicationDirPath() + u"/translations"_s).entryList({u"language_*.qm"_s}, QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot);
-    if(dirContent.isEmpty())
-        dirContent = QDir(FREELIB_DATA_DIR + u"/translations"_s).entryList({u"language_*.qm"_s}, QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot);
+    QStringList dirContent = QDir(u":/language"_s).entryList({u"language_*.qm"_s}, QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot);
     ui->Language->clear();
     ui->Language->addItem(u"english"_s, "en_US");
     ui->Language->setCurrentIndex(0);

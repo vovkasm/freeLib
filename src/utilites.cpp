@@ -362,11 +362,8 @@ void setLocale(const QString &sLocale)
     else
         translator_qt = std::unique_ptr<QTranslator> (new QTranslator());
 
-    QString sQmFile = QStringLiteral("/translations/language_%1.qm").arg(sLocale.left(2));
-    QString sQmFileFull = QApplication::applicationDirPath() + sQmFile;
-    if(!QFile::exists(sQmFileFull))
-        sQmFileFull = FREELIB_DATA_DIR + sQmFile;
-    if(translator->load(sQmFileFull))
+    QString sQmFile = QStringLiteral(":/language/language_%1.qm").arg(sLocale.left(2));
+    if(translator->load(sQmFile))
         QApplication::installTranslator(translator.get());
     else
         translator.reset();

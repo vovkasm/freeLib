@@ -35,10 +35,6 @@ if(UNIX AND NOT APPLE)
     install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/xsl/fonts DESTINATION ${DATA_INSTALL_DIR})
 endif()
 
-if(APPLE)
-    set(DATA_INSTALL_DIR "freelib")
-endif()
-
 add_subdirectory(src/)
 add_subdirectory(data/)
 
@@ -49,9 +45,8 @@ install(TARGETS freelib
 
 if(APPLE)
     set(ICNS_PATH ${CMAKE_SOURCE_DIR}/data/macos/freeLib.icns)
-    set_source_files_properties(${ICNS_PATH} PROPERTIES
-        MACOSX_PACKAGE_LOCATION "Resources"
-    )
+    set_source_files_properties(${ICNS_PATH} TARGET_DIRECTORY freelib PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
+
     target_sources(freelib PRIVATE
         ${ICNS_PATH}
     )
