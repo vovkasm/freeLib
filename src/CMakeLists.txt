@@ -191,12 +191,6 @@ target_precompile_headers(freelib
     precompiled.h
 )
 
-set_target_properties(freelib PROPERTIES
-    MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
-    MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
-    MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
-)
-
 if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(freelib)
 endif()

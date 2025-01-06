@@ -41,10 +41,23 @@ add_subdirectory(src/)
 add_subdirectory(data/)
 
 install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/xsl/fonts DESTINATION ${DATA_INSTALL_DIR})
-set_target_properties(freelib PROPERTIES
-    MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
-    MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
-    MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
-)
+
+if(APPLE)
+    set(ICNS_PATH ${CMAKE_SOURCE_DIR}/data/macos/freeLib.icns)
+    set_source_files_properties(${ICNS_PATH} PROPERTIES
+        MACOSX_PACKAGE_LOCATION "Resources"
+    )
+    target_sources(freelib PRIVATE
+        ${ICNS_PATH}
+    )
+    set_target_properties(freelib PROPERTIES
+        MACOSX_BUNDLE ON
+        MACOSX_BUNDLE_BUNDLE_NAME "freeLib"
+        MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
+        MACOSX_BUNDLE_GUI_IDENTIFIER org.vovkasm.freeLib
+        MACOSX_BUNDLE_ICON_FILE "freeLib.icns"
+        MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
+    )
+endif()
 
 
