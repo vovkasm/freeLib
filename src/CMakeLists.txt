@@ -77,8 +77,6 @@ set(PROJECT_SOURCES
         SmtpClient/src/mimecontentencoder.cpp   SmtpClient/src/mimecontentencoder.h
 )
 
-add_subdirectory(Help)
-
 if((FREELIB_QT_MAJOR_VERSION EQUAL 6) AND (QT_VERSION_MINOR GREATER_EQUAL 4))
   find_package(Qt6 COMPONENTS HttpServer QUIET)
   if(Qt6HttpServer_FOUND)
@@ -128,6 +126,20 @@ if(UNIX)
     file(COPY ${FONTS} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/xsl/fonts)
 endif(UNIX)
 
+set(HELP_SOURCE
+    Help/about.md
+    Help/params.md
+    Help/cmd_params.md
+    Help/changelog.md
+)
+
+file(COPY ${HELP_SOURCE} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Help)
+set_source_files_properties(${HELP_SOURCE} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources/help")
+
+if(NOT APPLE)
+    install(FILES ${HELP_SOURCE} DESTINATION ${DATA_INSTALL_DIR}/help)
+endif()
+
 if(FREELIB_QT_MAJOR_VERSION EQUAL 6)
     qt6_add_resources(PROJECT_SOURCES resource.qrc)
     qt_add_executable(freelib
@@ -135,6 +147,7 @@ if(FREELIB_QT_MAJOR_VERSION EQUAL 6)
         MANUAL_FINALIZATION
         translations.qrc
         ${PROJECT_SOURCES}
+        ${HELP_SOURCE}
     )
 else()
     qt5_add_resources(PROJECT_SOURCES resource.qrc)
@@ -142,6 +155,7 @@ else()
         MACOSX_BUNDLE
         translations.qrc
         ${PROJECT_SOURCES}
+        ${HELP_SOURCE}
     )
 endif()
 
