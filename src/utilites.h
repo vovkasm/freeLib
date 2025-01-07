@@ -68,6 +68,7 @@ void setProxy();
 #endif
 QSharedPointer<QSettings> GetSettings(bool bReopen = false);
 QString getAppDirPath();
+QString getResourcesPath();
 void setLocale(const QString &sLocale);
 bool setCurrentZipFileName(QuaZip *zip, const QString &name);
 bool kindlegenInstalled();

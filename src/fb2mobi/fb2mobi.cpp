@@ -1758,9 +1758,9 @@ QString fb2mobi::convert(const std::vector<QString> &files, uint idBook)
                         {
                             QFile::copy(sFontsPath % u"/"_s % sFileFont, sTmpDir_ + u"/OEBPS/fonts/font%1.ttf"_s.arg(index));
                         }
-                        else if(QFile::exists(FREELIB_DATA_DIR % u"/fonts"_s % sFileFont))
+                        else if(QFile::exists(getResourcesPath() % u"/fonts"_s % sFileFont))
                         {
-                            QFile::copy(FREELIB_DATA_DIR % u"/fonts"_s % sFileFont, sTmpDir_ + u"/OEBPS/fonts/font%1.ttf"_s.arg(index));
+                            QFile::copy(getResourcesPath() % u"/fonts"_s % sFileFont, sTmpDir_ + u"/OEBPS/fonts/font%1.ttf"_s.arg(index));
                         }
                         else
                         {

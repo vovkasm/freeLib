@@ -190,7 +190,7 @@ FontFrame::FontFrame(bool use, int tag, const QString &font, const QString &font
 
     QDir dir(QApplication::applicationDirPath() + u"/xsl/fonts"_s);
     if(!dir.exists()){
-        dir.setPath(FREELIB_DATA_DIR + QStringLiteral("/fonts"));
+        dir.setPath(getResourcesPath() + QStringLiteral("/fonts"));
     }
 
     auto listFiles = dir.entryList(QStringList() << u"*.ttf"_s, QDir::Files|QDir::NoSymLinks|QDir::NoDotAndDotDot|QDir::Readable, QDir::Name);

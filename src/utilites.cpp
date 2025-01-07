@@ -322,7 +322,12 @@ QSharedPointer<QSettings> GetSettings(bool bReopen)
 
 QString getAppDirPath()
 {
-    QString path = QApplication::applicationDirPath();
+    static QString path;
+
+    if (!path.isEmpty())
+        return path;
+
+    path = QApplication::applicationDirPath();
 
     #ifdef Q_OS_MAC
     // On macos if there is application bundle, we must locate config relative to bundle path, not executable
@@ -334,6 +339,30 @@ QString getAppDirPath()
             dir.cdUp();
             dir.cdUp();
             // Yes, we change dir to the one contains our AppName.app bundle
+            path = dir.absolutePath();
+        }
+    }
+    #endif
+
+    return path;
+}
+
+QString getResourcesPath() {
+    static QString path;
+
+    if (!path.isEmpty())
+        return path;
+
+    path = FREELIB_DATA_DIR;
+
+    #ifdef Q_OS_MAC
+    // On macos we must locate resource inside bundle
+    QDir dir(QApplication::applicationDirPath());
+    dir.makeAbsolute();
+    if (dir.dirName() == "MacOS") {
+        dir.cdUp();
+        if (dir.dirName() == "Contents") {
+            dir.cd(u"Resources"_s);
             path = dir.absolutePath();
         }
     }

@@ -4,7 +4,7 @@
 
 #include <QFile>
 
-#include "config-freelib.h"
+#include "utilites.h"
 
 HelpDialog::HelpDialog(QWidget *parent) :
     QDialog(parent),
@@ -27,7 +27,7 @@ void HelpDialog::loadPage(QTextBrowser *textBrowser, const QString &sFileName)
 {
     QString sHelpFile = QApplication::applicationDirPath() + QStringLiteral("/Help/") + sFileName;
     if(!QFile::exists(sHelpFile))
-        sHelpFile = FREELIB_DATA_DIR + QStringLiteral("/help/") + sFileName;
+        sHelpFile = getResourcesPath() + QStringLiteral("/help/") + sFileName;
     QFile file(sHelpFile);
     if (file.open(QIODevice::ReadOnly | QIODevice::Text))
     {

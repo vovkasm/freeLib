@@ -13,7 +13,6 @@
 
 #include "exportframe.h"
 #include "conversionframe.h"
-#include "config-freelib.h"
 #include "utilites.h"
 
 SettingsDlg::SettingsDlg(QWidget *parent) :
@@ -829,9 +828,9 @@ void SettingsDlg::onBtnSaveExportClicked()
             {
                 font_file = db_path % u"/"_s % font_file;
             }
-            else if(QFile::exists(FREELIB_DATA_DIR % u"/fonts"_s % font_file))
+            else if(QFile::exists(getResourcesPath() % u"/fonts"_s % font_file))
             {
-                font_file = FREELIB_DATA_DIR % u"/fonts"_s % font_file;
+                font_file = getResourcesPath() % u"/fonts"_s % font_file;
             }
             else
             {
@@ -882,7 +881,7 @@ void SettingsDlg::onBtnOpenExportClicked()
                 continue;
             if(QFile::exists(db_path % u"/"_s % fi.fileName()))
                 continue;
-            if(QFile::exists(FREELIB_DATA_DIR % u"/fonts/"_s % fi.fileName()))
+            if(QFile::exists(getResourcesPath() % u"/fonts/"_s % fi.fileName()))
                 continue;
 
 
